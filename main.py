@@ -6,7 +6,8 @@ import threading
 
 def main():
     mundo = Mundo()
-    aspiradora_inteligente = Aspiradora(mundo)
+    limite_movimientos = 3  # Definir el límite de movimientos
+    aspiradora_inteligente = Aspiradora(mundo, limite_movimientos=5)
     aspiradora_estupida = AspiradoraEstupida()
 
     aspiradora_inteligente.start()
