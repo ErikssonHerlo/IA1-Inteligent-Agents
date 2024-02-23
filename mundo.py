@@ -1,16 +1,14 @@
-import threading
-import random
-import time
-
-
 class Mundo:
     def __init__(self):
-        self.suciedad = {"A": False, "B": False}
+        self.suciedad = {'A': False, 'B': False}
 
-    def ensuciar(self, posicion):
-        self.suciedad[posicion] = True
-        print("Cuadrante", posicion, "ensuciado.")
+    def esta_sucio(self, cuadro):
+        return self.suciedad[cuadro]
 
-    def limpiar(self, posicion):
-        self.suciedad[posicion] = False
-        print("Cuadrante", posicion, "limpiado.")
+    def limpiar(self, cuadro):
+        print("El cuadro", cuadro, "ha sido limpiado.")
+        self.suciedad[cuadro] = False
+
+    def ensuciar_cuadro(self, cuadro):
+        print("El cuadro", cuadro, "se ha ensuciado.")
+        self.suciedad[cuadro] = True

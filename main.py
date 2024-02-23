@@ -1,46 +1,34 @@
-from aspiradora import Aspiradora, AspiradoraInteligente, AspiradoraEstupida
+from aspiradora import Aspiradora
+from aspiradora_estupida import AspiradoraEstupida
 from mundo import Mundo
 import threading
 
 
 def main():
     mundo = Mundo()
+    aspiradora_inteligente = Aspiradora(mundo)
+    aspiradora_estupida = AspiradoraEstupida()
 
-    tipo_aspiradora = input(
-        "Seleccione el tipo de aspiradora (inteligente / estupida): ")
-    if tipo_aspiradora.lower() == "inteligente":
-        aspiradora = AspiradoraInteligente(mundo)
-    elif tipo_aspiradora.lower() == "estupida":
-        aspiradora = AspiradoraEstupida(mundo)
-    else:
-        print("Tipo de aspiradora no válido.")
-        return
-
-    # Función para ejecutar la aspiradora
-    def ejecutar_aspiradora():
-        while True:
-            accion = input(
-                "Selecciona una acción (mover derecha, mover izquierda, aspirar, nada): ")
-            aspiradora.ejecutar_accion(accion)
-            if accion == "q":
-                break
-
-    # Crear un thread para ejecutar la aspiradora
-    t = threading.Thread(target=ejecutar_aspiradora)
-    t.start()
+    aspiradora_inteligente.start()
+    aspiradora_estupida.start()
 
     while True:
-        accion = input(
-            "Ingrese una acción para ensuciar (A/B) o 'q' para salir: ")
-        if accion.lower() == 'q':
-            break
-        if accion.upper() in ['A', 'B']:
-            mundo.ensuciar(accion.upper())
-        else:
-            print("Cuadrante no válido.")
+        print("\n--- Menú ---")
+        print("1. Enviar suciedad a cuadro A")
+        print("2. Enviar suciedad a cuadro B")
+        print("3. Salir")
+        opcion = input("Seleccione una opción: ")
 
-    t.join()
-    print("Programa finalizado.")
+        if opcion == '1':
+            mundo.ensuciar_cuadro('A')
+            aspiradora_inteligente.limpiar = True  # Iniciar limpieza en cuadro A
+        elif opcion == '2':
+            mundo.ensuciar_cuadro('B')
+            aspiradora_inteligente.limpiar = True  # Iniciar limpieza en cuadro B
+        elif opcion == '3':
+            break
+        else:
+            print("Opción inválida. Inténtelo de nuevo.")
 
 
 if __name__ == "__main__":

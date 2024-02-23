@@ -1,62 +1,34 @@
+import threading
 import time
 
 
-class Aspiradora:
+class Aspiradora(threading.Thread):
     def __init__(self, mundo):
+        super().__init__()
         self.mundo = mundo
-        self.posicion = "A"
+        self.posicion = 'A'
+        self.limpiar = False
 
-    def mover_derecha(self):
-        self.posicion = "B"
-        print("Aspiradora se movió a la derecha.")
+    def run(self):
+        while True:
+            if self.limpiar:
+                self.limpiar_cuadrante()
+                self.limpiar = False
+            else:
+                self.moverse()
+                self.verificar_suciedad()
 
-    def mover_izquierda(self):
-        self.posicion = "A"
-        print("Aspiradora se movió a la izquierda.")
+    def moverse(self):
+        print("Aspiradora moviéndose...")
+        time.sleep(1)  # Simulando el tiempo de movimiento
+        self.posicion = 'B' if self.posicion == 'A' else 'A'
+        print("Aspiradora en cuadro", self.posicion)
 
-    def aspirar(self):
+    def verificar_suciedad(self):
+        if self.mundo.esta_sucio(self.posicion):
+            print("El cuadro está sucio.")
+            self.limpiar = True
+
+    def limpiar_cuadrante(self):
+        print("Aspirando suciedad en cuadro", self.posicion)
         self.mundo.limpiar(self.posicion)
-        print("Aspiradora ha aspirado el cuadrante", self.posicion)
-
-    def ejecutar_accion(self, accion):
-        if accion == "derecha":
-            self.mover_derecha()
-        elif accion == "izquierda":
-            self.mover_izquierda()
-        elif accion == "aspirar":
-            self.aspirar()
-        elif accion == "nada":
-            print("Aspiradora no hace nada.")
-        else:
-            print("Acción no reconocida.")
-
-    def ejecutar(self):
-        while True:
-            accion = input(
-                "Selecciona una acción (derecha, izquierda, aspirar, nada): ")
-            self.ejecutar_accion(accion)
-            time.sleep(1)
-
-
-class AspiradoraInteligente(Aspiradora):
-    def ejecutar(self):
-        while True:
-            if self.mundo.suciedad[self.posicion]:
-                self.aspirar()
-            else:
-                if self.posicion == "A":
-                    self.mover_derecha()
-                else:
-                    self.mover_izquierda()
-            time.sleep(1)
-
-
-class AspiradoraEstupida(Aspiradora):
-    def ejecutar(self):
-        while True:
-            self.aspirar()
-            if self.posicion == "A":
-                self.mover_derecha()
-            else:
-                self.mover_izquierda()
-            time.sleep(1)
