@@ -1,34 +1,44 @@
 import threading
 import time
+import random
 
 
-class Aspiradora(threading.Thread):
-    def __init__(self, mundo):
-        super().__init__()
-        self.mundo = mundo
-        self.posicion = 'A'
-        self.limpiar = False
+class Aspiradora:
+    def __init__(self):
+        self.estado = 'limpiar'
+        self.cuadrante_actual = 'A'
+        self.sucio = False
 
-    def run(self):
-        while True:
-            if self.limpiar:
-                self.limpiar_cuadrante()
-                self.limpiar = False
-            else:
-                self.moverse()
-                self.verificar_suciedad()
+    def limpiar(self):
+        print(f"Aspiradora: Limpiando cuadrante {self.cuadrante_actual}")
+        self.sucio = False
 
-    def moverse(self):
-        print("Aspiradora moviéndose...")
-        time.sleep(1)  # Simulando el tiempo de movimiento
-        self.posicion = 'B' if self.posicion == 'A' else 'A'
-        print("Aspiradora en cuadro", self.posicion)
+    def mover_derecha(self):
+        if self.cuadrante_actual == 'A':
+            self.cuadrante_actual = 'B'
+        print("Aspiradora: Moviendo a la derecha")
 
-    def verificar_suciedad(self):
-        if self.mundo.esta_sucio(self.posicion):
-            print("El cuadro está sucio.")
-            self.limpiar = True
+    def mover_izquierda(self):
+        if self.cuadrante_actual == 'B':
+            self.cuadrante_actual = 'A'
+        print("Aspiradora: Moviendo a la izquierda")
 
-    def limpiar_cuadrante(self):
-        print("Aspirando suciedad en cuadro", self.posicion)
-        self.mundo.limpiar(self.posicion)
+    def ensuciar(self):
+        print(f"¡Cuadrante {self.cuadrante_actual} ensuciado!")
+        self.sucio = True
+
+    def actualizar_estado(self, accion, percepcion):
+        if percepcion == 'sucio':
+            self.estado = 'limpiar'
+        elif accion == 'mover_derecha':
+            self.estado = 'mover_derecha'
+        elif accion == 'mover_izquierda':
+            self.estado = 'mover_izquierda'
+
+    def ejecutar_accion(self):
+        if self.estado == 'limpiar':
+            self.limpiar()
+        elif self.estado == 'mover_derecha':
+            self.mover_derecha()
+        elif self.estado == 'mover_izquierda':
+            self.mover_izquierda()

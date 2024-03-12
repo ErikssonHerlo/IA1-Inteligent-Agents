@@ -6,7 +6,7 @@ class AspiradoraEstupida(threading.Thread):
     def __init__(self):
         super().__init__()
 
-    def run(self):
+    def ejecutar(self):
         while True:
             print("- Aspiradora estúpida inmóvil...")
-            time.sleep(3)  # Simulando el tiempo de espera
+            time.sleep(5)  # Simulando el tiempo de espera

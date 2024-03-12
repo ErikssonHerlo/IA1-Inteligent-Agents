@@ -1,34 +1,30 @@
-from aspiradora import Aspiradora
 from aspiradora_estupida import AspiradoraEstupida
+from aspiradora_inteligente import AspiradoraInteligente
 from mundo import Mundo
 import threading
 
 
 def main():
-    mundo = Mundo()
-    aspiradora_inteligente = Aspiradora(mundo)
-    aspiradora_estupida = AspiradoraEstupida()
 
-    aspiradora_inteligente.start()
-    aspiradora_estupida.start()
+    # Iniciar el hilo para la aspiradora estúpida
+    aspiradora_estupida = AspiradoraEstupida()
+    hilo_estupida = threading.Thread(target=aspiradora_estupida.ejecutar)
+    hilo_estupida.start()
+
+    # Iniciar el hilo para la aspiradora inteligente
+    aspiradora_inteligente = AspiradoraInteligente()
+    hilo_inteligente = threading.Thread(target=aspiradora_inteligente.ejecutar)
+    hilo_inteligente.start()
 
     while True:
-        print("\n--- Menú ---")
-        print("1. Enviar suciedad a cuadro A")
-        print("2. Enviar suciedad a cuadro B")
-        print("3. Salir")
-        opcion = input("Seleccione una opción: ")
-
-        if opcion == '1':
-            mundo.ensuciar_cuadro('A')
-            aspiradora_inteligente.limpiar = True  # Iniciar limpieza en cuadro A
-        elif opcion == '2':
-            mundo.ensuciar_cuadro('B')
-            aspiradora_inteligente.limpiar = True  # Iniciar limpieza en cuadro B
-        elif opcion == '3':
+        ensuciar = input(
+            "¿Qué cuadrante desea ensuciar (A/B)? (Presione 'q' para salir): \n\n")
+        if ensuciar.lower() == 'q':
             break
+        elif ensuciar.upper() in ['A', 'B']:
+            aspiradora_inteligente.ensuciar(ensuciar.upper())
         else:
-            print("Opción inválida. Inténtelo de nuevo.")
+            print("Cuadrante no válido. Intente de nuevo.")
 
 
 if __name__ == "__main__":
